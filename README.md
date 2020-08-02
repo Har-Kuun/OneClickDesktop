@@ -1,5 +1,5 @@
 # OneClickDesktop
-A one-click script that installs a remote desktop environment on a Linux server with browser/VNC/RDP access.
+A one-click script that installs a remote desktop environment on a Linux server with browser/VNC access.
 
 ## Features of this script
 * Build Guacamole Server from source.
