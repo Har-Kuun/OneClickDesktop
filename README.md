@@ -8,8 +8,6 @@ A one-click script that installs a remote desktop environment on a Linux server 
 * One-click free SSL certificates from Let's Encrypt
 * You can access your remote desktop from browsers, no need for VNC software.
 
-The author thanks LinuxBabe for providing a detailed Guacamole setup [tutorial](https://www.linuxbabe.com/debian/apache-guacamole-remote-desktop-debian-10-buster).
-
 ## System requirement
 * A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit or Debian 10 64 bit system
 * __Do NOT install any web server programs (e.g., Apache, Nginx, LiteSpeed, Caddy).  Do NOT install LAMP or LEMP stack.  Do NOT install any admin panels (e.g., cPanel, DirectAdmin, BTcn, VestaCP).  They are NOT compatible with this script.__
@@ -35,6 +33,10 @@ For faster response, you can leave a message on this project webpage https://qin
 中文支持请访问 https://qing.su/article/oneclick-desktop.html
 
 Thank you!
+
+## References
+* Guacamole documentation: https://guacamole.apache.org/doc/gug/installing-guacamole.html
+* The author thanks LinuxBabe for providing a [detailed Guacamole setup tutorial](https://www.linuxbabe.com/debian/apache-guacamole-remote-desktop-debian-10-buster).
 
 ## Update log
  __Current version: v0.0.1__
