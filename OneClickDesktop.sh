@@ -1,15 +1,19 @@
 #!/bin/bash
-####################################################################
-#    One-click Desktop & Browser Access Setup v0.0.1               #
-#    Written by shc (https://qing.su)                              #
-#    Github link: https://github.com/Har-Kuun/OneClickDesktop      #
-#    Contact me: https://t.me/hsun94   E-mail: hi@qing.su          #
-#                                                                  #
-#    This script is distributed in the hope that it will be        #
-#    useful, but ABSOLUTELY WITHOUT ANY WARRANTY.                  #
-#                                                                  #
-#    Thank you for using this script.                              #
-####################################################################
+###########################################################################################
+#    One-click Desktop & Browser Access Setup Script v0.0.1                               #
+#    Written by shc (https://qing.su)                                                     #
+#    Github link: https://github.com/Har-Kuun/OneClickDesktop                             #
+#    Contact me: https://t.me/hsun94   E-mail: hi@qing.su                                 #
+#                                                                                         #
+#    This script is distributed in the hope that it will be                               #
+#    useful, but ABSOLUTELY WITHOUT ANY WARRANTY.                                         #
+#                                                                                         #
+#    The author thanks LinuxBabe for providing detailed                                   #
+#    instructions on Guacamole setup.                                                     #
+#    https://www.linuxbabe.com/debian/apache-guacamole-remote-desktop-debian-10-buster    #
+#                                                                                         #
+#    Thank you for using this script.                                                     #
+###########################################################################################
 
 
 #You can change the Guacamole source file download link here.
@@ -18,10 +22,9 @@
 GUACAMOLE_DOWNLOAD_LINK="https://mirrors.ocf.berkeley.edu/apache/guacamole/1.2.0/source/guacamole-server-1.2.0.tar.gz"
 GUACAMOLE_VERSION="1.2.0"
 
-
-#By default, this script only works on Ubuntu 18/20 and Debian 9/10.
+#By default, this script only works on Ubuntu 18/20 and Debian 10.
 #You can disable the OS check switch below and tweak the code yourself to try to install it in other OS versions.
-#Please do note that if you choose to use this script on OS other than Ubuntu 18/20 or Debian 9/10, you might mess up your OS.  Please keep a backup of your server before installation.
+#Please do note that if you choose to use this script on OS other than Ubuntu 18/20 or Debian 10, you might mess up your OS.  Please keep a backup of your server before installation.
 
 OS_CHECK_ENABLED=ON
 
@@ -32,6 +35,9 @@ OS_CHECK_ENABLED=ON
 #    Functions start here.                                              #
 #    Do not change anything below unless you know what you are doing.   #
 #########################################################################
+
+exec > >(tee -i OneClickDesktop.log)
+exec 2>&1
 
 function check_OS
 {
@@ -195,7 +201,7 @@ function configure_guacamole
 		read vnc_password
 	done
 	echo "Please note that VNC password is NOT needed for browser access."
-	sleep 3
+	sleep 1
 	echo 
 	mkdir /etc/guacamole/
 	cat > /etc/guacamole/guacamole.properties <<END
@@ -359,11 +365,11 @@ END
 			say @B"You can now access your desktop at https://${guacamole_hostname}!" green
 		else
 			say "Oops! Let's Encrypt SSL certificate installation failed." red
-			say @B"Please manually try \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email $le_email -d $guacamole_hostname\" later." yellow
+			say @B"Please manually try \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email $le_email -d $guacamole_hostname\"." yellow
 			say @B"You can now access your desktop at http://${guacamole_hostname}!" green
 		fi
 	else
-		say @B"No problem! If you would like to install a Let's Encrypt certificate later, please run \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\" manually." yellow
+		say @B"No problem! If you would like to install a Let's Encrypt certificate later, please manually run \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\"." yellow
 		say @B"You can now access your desktop at http://${guacamole_hostname}!" green
 	fi
 	say @B"Your username is $guacamole_username and your password is $guacamole_password_prehash." green
@@ -372,7 +378,9 @@ END
 function main
 {
 	display_license
-	check_OS
+	if [ "x$OS_CHECK_ENABLED" != "xOFF" ] ; then
+		check_OS
+	fi
 	echo "This script is going to install a desktop environment with browser access."
 	echo 
 	say @B"This environment requires at least 1 GB of RAM." yellow
