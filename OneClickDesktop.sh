@@ -1,6 +1,6 @@
 #!/bin/bash
 ###########################################################################################
-#    One-click Desktop & Browser Access Setup Script v0.0.1                               #
+#    One-click Desktop & Browser Access Setup Script v0.0.2                               #
 #    Written by shc (https://qing.su)                                                     #
 #    Github link: https://github.com/Har-Kuun/OneClickDesktop                             #
 #    Contact me: https://t.me/hsun94   E-mail: hi@qing.su                                 #
@@ -125,11 +125,11 @@ function install_guacamole
 	say @B"Setting up dependencies..." yellow
 	echo 
 	apt-get update && apt-get upgrade -y
-	apt-get install wget curl sudo zip unzip tar perl expect build-essential libcairo2-dev libpng-dev libtool-bin libossp-uuid-dev libvncserver-dev freerdp2-dev libssh2-1-dev libtelnet-dev libwebsockets-dev libpulse-dev libvorbis-dev libwebp-dev libssl-dev libpango1.0-dev libswscale-dev libavcodec-dev libavutil-dev libavformat-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user -y
+	apt-get install wget curl sudo zip unzip tar perl expect build-essential libcairo2-dev libpng-dev libtool-bin libossp-uuid-dev libvncserver-dev freerdp2-dev libssh2-1-dev libtelnet-dev libwebsockets-dev libpulse-dev libvorbis-dev libwebp-dev libssl-dev libpango1.0-dev libswscale-dev libavcodec-dev libavutil-dev libavformat-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user japan* chinese* korean* fonts-arphic-ukai fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core -y
 	if [ "$OS" = "DEBIAN10" ] ; then
 		apt-get install libjpeg62-turbo-dev -y
 	else
-		apt-get install libjpeg-turbo8-dev -y
+		apt-get install libjpeg-turbo8-dev language-pack-ja language-pack-zh* language-pack-ko -y
 	fi
 	wget $GUACAMOLE_DOWNLOAD_LINK
 	tar zxf guacamole-server-${GUACAMOLE_VERSION}.tar.gz
@@ -273,6 +273,11 @@ ExecStop=/usr/bin/vncserver -kill :%i
 [Install]
 WantedBy=multi-user.target
 END
+	cat > $HomeDir/Desktop/EnableCopyPaste.sh <<END
+#!/bin/bash
+/usr/bin/vncconfig -display :1 &
+END
+	chmod +x $HomeDir/Desktop/EnableCopyPaste.sh
 	vncpassbinpath=/usr/bin/vncpasswd
 	/usr/bin/expect <<END
 spawn "$vncpassbinpath"
@@ -290,6 +295,7 @@ END
 	vncserver -kill :1
 	systemctl start vncserver@1.service
 	systemctl enable vncserver@1.service
+	/usr/bin/vncconfig -display :1 &
 	echo 
 	ss -lnpt | grep vnc > /dev/null
 	if [ $? = 0 ] ; then
@@ -309,7 +315,7 @@ function display_license
 	echo 
 	echo '*******************************************************************'
 	echo '*       One-click Desktop & Browser Access Setup Script           *'
-	echo '*       Version 0.0.1                                             *'
+	echo '*       Version 0.0.2                                             *'
 	echo '*       Author: shc (Har-Kuun) https://qing.su                    *'
 	echo '*       https://github.com/Har-Kuun/OneClickDesktop               *'
 	echo '*       Thank you for using this script.  E-mail: hi@qing.su      *'
