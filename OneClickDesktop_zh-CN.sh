@@ -273,11 +273,6 @@ ExecStop=/usr/bin/vncserver -kill :%i
 [Install]
 WantedBy=multi-user.target
 END
-	cat > $HomeDir/Desktop/EnableCopyPaste.sh <<END
-#!/bin/bash
-/usr/bin/vncconfig -display :1 &
-END
-	chmod +x $HomeDir/Desktop/EnableCopyPaste.sh
 	vncpassbinpath=/usr/bin/vncpasswd
 	/usr/bin/expect <<END
 spawn "$vncpassbinpath"
@@ -296,6 +291,11 @@ END
 	systemctl start vncserver@1.service
 	systemctl enable vncserver@1.service
 	/usr/bin/vncconfig -display :1 &
+	cat > $HomeDir/Desktop/EnableCopyPaste.sh <<END
+#!/bin/bash
+/usr/bin/vncconfig -display :1 &
+END
+	chmod +x $HomeDir/Desktop/EnableCopyPaste.sh
 	echo 
 	ss -lnpt | grep vnc > /dev/null
 	if [ $? = 0 ] ; then
