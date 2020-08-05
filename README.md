@@ -32,6 +32,7 @@ There is a few plugin scripts/addons available.
 * One-click install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh
 * One-click change web-login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
 * Tutorial to install Baiduyun Net Disk client.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/baiduyun.md
+
 Please submit an issue if you want more plugins to be written.
 
 ## Contact me
