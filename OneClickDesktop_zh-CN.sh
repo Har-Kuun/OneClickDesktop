@@ -240,9 +240,9 @@ function install_desktop
 	read catch_all
 	echo 
 	if [ "$OS" = "DEBIAN10" ] ; then
-		apt-get install xfce4 xfce4-goodies firefox-esr tigervnc-standalone-server -y
+		apt-get install xfce4 xfce4-goodies firefox-esr tigervnc-standalone-server tigervnc-common -y
 	else 
-		apt-get install xfce4 xfce4-goodies firefox tigervnc-standalone-server -y
+		apt-get install xfce4 xfce4-goodies firefox tigervnc-standalone-server tigervnc-common -y
 	fi
 	say @B"桌面环境，浏览器，以及VNC服务器安装成功。" green
 	echo "开始配置VNC服务器..."
