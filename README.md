@@ -12,7 +12,7 @@ A one-click script that installs a remote desktop environment on a Linux server 
 * A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit or Debian 10 64 bit system
 * __Do NOT install any web server programs (e.g., Apache, Nginx, LiteSpeed, Caddy).  Do NOT install LAMP or LEMP stack.  Do NOT install any admin panels (e.g., cPanel, DirectAdmin, BTcn, VestaCP).  They are NOT compatible with this script.__
 * 1 IPv4
-* At least 1024 MB RAM
+* At least 1024 MB RAM; 1.5+ GB is recommended.
 * Root access, or sudo user
 
 ## How to use
@@ -26,6 +26,13 @@ wget https://raw.githubusercontent.com/Har-Kuun/OneClickDesktop/master/OneClickD
 * If you encounter any errors, please check the `OneClickDesktop.log` file that's located within the same directory where you download this script.
 * Please consider reporting the error log at https://github.com/Har-Kuun/OneClickDesktop/issues so that I can fix any underlying issues.
 * Copy/paste between client and server should be enabled.  If you have any problems with copy/paste, please try to run the EnableCopyPaste.sh file on your Desktop.
+
+## Plugins
+There is a few plugin scripts/addons available.
+* One-click install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh
+* One-click change web-login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
+* Tutorial to install Baiduyun Net Disk client.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/baiduyun.md
+Please submit an issue if you want more plugins to be written.
 
 ## Contact me
 You can open an issue here if there is any problem/bug when you use it, or would like a new feature to be implemented.
