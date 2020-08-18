@@ -41,6 +41,8 @@ For faster response, you can leave a message on this project webpage https://qin
 
 中文支持请访问 https://qing.su/article/oneclick-desktop.html
 
+如果您的VPS包管理器使用的是阿里云镜像，请在安装前更换至任意其他镜像。阿里云的镜像有问题，在安装时会出现错误。
+
 Thank you!
 
 ## References
