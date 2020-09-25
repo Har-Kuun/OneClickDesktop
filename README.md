@@ -4,9 +4,9 @@ A one-click script that installs a remote desktop environment on a Linux server 
 ## Features of this script
 * Build Guacamole Server from source.
 * Set up Guacamole Web APP.
-* Install Tomcat 9, TigerVNC, XFCE4 Desktop, Firefox.
+* Install Tomcat 9, XRDP or TigerVNC, XFCE4 Desktop, Firefox.
 * One-click free SSL certificates from Let's Encrypt
-* You can access your remote desktop from browsers, no need for VNC software.
+* You can access your remote desktop from browsers, no need for RDP or VNC software.
 
 ## System requirement
 * A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit or Debian 10 64 bit system
@@ -29,7 +29,7 @@ wget https://raw.githubusercontent.com/Har-Kuun/OneClickDesktop/master/OneClickD
 
 ## Plugins
 There is a few plugin scripts/addons available.
-* One-click install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh
+* One-click install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh  Please note that this plugin currently only works for VNC method, not for RDP method.  Please install Chrome manually for RDP desktop environment.
 * One-click change web-login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
 * Tutorial to install Baiduyun Net Disk client.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/baiduyun.md
 
@@ -50,9 +50,10 @@ Thank you!
 * The author thanks LinuxBabe for providing a [detailed Guacamole setup tutorial](https://www.linuxbabe.com/debian/apache-guacamole-remote-desktop-debian-10-buster).
 
 ## Update log
- __Current version: v0.0.1__
+ __Current version: v0.1.0__
 
 |Date|Version|Changes|
 |---|---|---|
 |08/02/2020|v0.0.1|Script created|
 |08/03/2020|v0.0.2|Enable copy/paste; add Asian characters support.|
+|09/25/2020|v0.1.0|Add RDP feature; improve installation experience.|
