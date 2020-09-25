@@ -119,6 +119,86 @@ function determine_system_variables
 	HomeDir=$HOME
 }
 
+function get_user_options
+{
+	echo 
+	say @B"请输入您的Guacamole用户名:" yellow
+	read guacamole_username
+	echo 
+	say @B"请输入您的Guacamole密码:" yellow
+	read guacamole_password_prehash
+	read guacamole_password_md5 <<< $(echo -n $guacamole_password_prehash | md5sum | awk '{print $1}')
+	echo 
+	say @B"您想让Guacamole通过RDP还是VNC连接Linux桌面？" yellow
+	say @B"RDP请输入1, VNC请输入2. 如果您不清楚这是什么，请输入1." yellow
+	read choice_rdpvnc
+	echo 
+	if [ $choice_rdpvnc = 1 ] ; then
+		say @B"请选择屏幕分辨率。" yellow
+		echo "默认分辨率1280x800请输入1, 自适应分辨率请输入2, 手动设置分辨率请输入3."
+		read rdp_resolution_options
+		if [ $rdp_resolution_options = 2 ] ; then
+			set_rdp_resolution=0;
+		else
+			set_rdp_resolution=1;
+			if [ $rdp_resolution_options = 3 ] ; then
+				echo 
+				echo "请输入屏幕宽度（默认为1280）:"
+				read rdp_screen_width_input
+				echo "请输入屏幕高度（默认为800）:"
+				read rdp_screen_height_input
+				if [ $rdp_screen_width_input -gt 1 ] && [ $rdp_screen_height_input -gt 1 ] ; then
+					rdp_screen_width=$rdp_screen_width_input
+					rdp_screen_height=$rdp_screen_height_input
+				else
+					say "屏幕分辨率设置无效。" red
+					echo 
+					exit 1
+				fi
+			else
+				rdp_screen_width=1280
+				rdp_screen_height=800
+			fi
+		fi
+		say @B"屏幕分辨率设置成功。" green
+	else
+		echo 
+		while [ ${#vnc_password} != 8 ] ; do
+			say @B"请输入一个长度为8位的VNC密码:" yellow
+		read vnc_password
+		done
+		say @B"VNC密码成功设置." green
+		echo "通过浏览器方式访问远程桌面时，您将无需使用此VNC密码。"
+		sleep 1
+	fi
+	echo 
+	say @B"请问您是否想要设置Nginx反代？" yellow
+	say @B"请注意，如果您想在本地电脑和服务器之间复制粘贴文本，您必须启用反代并设置SSL. 不过，您也可以暂时先不设置反代，以后再手动设置。" yellow
+	echo "Please type [Y/n]:"
+	read install_nginx
+	if [ "x$install_nginx" = "xY" ] || [ "x$install_nginx" = "xy" ] ; then
+		echo 
+		say @B"请输入您的域名（比如desktop.qing.su）:" yellow
+		read guacamole_hostname
+		echo 
+		echo 
+		echo "是否为域名${guacamole_hostname}申请免费的Let's Encrypt SSL证书？ [Y/N]"
+		say @B"设置证书之前，您必须将您的域名指向本服务器的IP地址！" yellow
+		echo "如果您确认了您的域名已经指向了本服务器的IP地址，请输入Y开始证书申请。"
+		read confirm_letsencrypt
+		echo 
+		if [ "x$confirm_letsencrypt" = "xY" ] || [ "x$confirm_letsencrypt" = "xy" ] ; then
+			echo "请输入一个邮箱地址:"
+			read le_email
+		fi
+	else
+		say @B"好的，将跳过Nginx安装。" yellow
+	fi
+	echo 
+	say @B"开始安装桌面环境，请稍后。" green
+	sleep 3
+}	
+
 function install_guacamole
 {
 	echo 
@@ -189,20 +269,6 @@ function install_guacamole_web
 function configure_guacamole
 {
 	echo 
-	say @B"请输入您的用户名:" yellow
-	read guacamole_username
-	echo 
-	say @B"请输入您的密码:" yellow
-	read guacamole_password_prehash
-	echo 
-	read guacamole_password_md5 <<< $(echo -n $guacamole_password_prehash | md5sum | awk '{print $1}')
-	while [ ${#vnc_password} != 8 ] ; do
-		say @B"请输入一个长度为8位的VNC密码:" yellow
-		read vnc_password
-	done
-	echo "通过浏览器方式访问远程桌面时，您将无需使用此VNC密码。"
-	sleep 1
-	echo 
 	mkdir /etc/guacamole/
 	cat > /etc/guacamole/guacamole.properties <<END
 guacd-hostname: localhost
@@ -210,7 +276,42 @@ guacd-port: 4822
 auth-provider: net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
 basic-user-mapping: /etc/guacamole/user-mapping.xml
 END
-	cat > /etc/guacamole/user-mapping.xml <<END
+	if [ $choice_rdpvnc = 1 ] ; then
+		if [ $set_rdp_resolution = 0 ] ; then
+			cat > /etc/guacamole/user-mapping.xml <<END
+<user-mapping>
+    <authorize
+         username="$guacamole_username"
+         password="$guacamole_password_md5"
+         encoding="md5">      
+       <connection name="default">
+         <protocol>rdp</protocol>
+         <param name="hostname">localhost</param>
+         <param name="port">3389</param>
+       </connection>
+    </authorize>
+</user-mapping>
+END
+		else
+			cat > /etc/guacamole/user-mapping.xml <<END
+<user-mapping>
+    <authorize
+         username="$guacamole_username"
+         password="$guacamole_password_md5"
+         encoding="md5">      
+       <connection name="default">
+         <protocol>rdp</protocol>
+         <param name="hostname">localhost</param>
+         <param name="port">3389</param>
+		 <param name="width">$rdp_screen_width</param>
+		 <param name="height">$rdp_screen_height</param>
+       </connection>
+    </authorize>
+</user-mapping>
+END
+		fi
+	else
+		cat > /etc/guacamole/user-mapping.xml <<END
 <user-mapping>
     <authorize
          username="$guacamole_username"
@@ -225,12 +326,13 @@ END
     </authorize>
 </user-mapping>
 END
+	fi
 	systemctl restart tomcat9 guacd
 	say @B"Guacamole配置成功！" green
 	echo 
 }
 
-function install_desktop
+function install_vnc
 {
 	echo 
 	echo "开始安装桌面环境，Firefox浏览器，以及VNC服务器..."
@@ -310,6 +412,105 @@ END
 	fi
 }
 
+function install_rdp
+{
+	echo 
+	echo "开始安装桌面环境，Firefox浏览器，以及XRDP服务器..."
+	say @B"如果系统提示您配置LightDM，您可以直接按回车键。" yellow
+	echo 
+	echo "请按回车键继续。"
+	read catch_all
+	echo 
+	if [ "$OS" = "DEBIAN10" ] ; then
+		apt-get install xfce4 xfce4-goodies firefox-esr xrdp -y
+	else 
+		apt-get install xfce4 xfce4-goodies firefox xrdp -y
+	fi
+	say @B"桌面环境，浏览器，以及XRDP服务器安装成功。" green
+	echo "开始配置XRDP服务器..."
+	sleep 2
+	echo 
+	mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh.backup
+	cat > /etc/xrdp/startwm.sh <<END
+#!/bin/sh
+# xrdp X session start script (c) 2015, 2017 mirabilos
+# published under The MirOS Licence
+
+if test -r /etc/profile; then
+        . /etc/profile
+fi
+
+if test -r /etc/default/locale; then
+        . /etc/default/locale
+        test -z "${LANG+x}" || export LANG
+        test -z "${LANGUAGE+x}" || export LANGUAGE
+        test -z "${LC_ADDRESS+x}" || export LC_ADDRESS
+        test -z "${LC_ALL+x}" || export LC_ALL
+        test -z "${LC_COLLATE+x}" || export LC_COLLATE
+        test -z "${LC_CTYPE+x}" || export LC_CTYPE
+        test -z "${LC_IDENTIFICATION+x}" || export LC_IDENTIFICATION
+        test -z "${LC_MEASUREMENT+x}" || export LC_MEASUREMENT
+        test -z "${LC_MESSAGES+x}" || export LC_MESSAGES
+        test -z "${LC_MONETARY+x}" || export LC_MONETARY
+        test -z "${LC_NAME+x}" || export LC_NAME
+        test -z "${LC_NUMERIC+x}" || export LC_NUMERIC
+        test -z "${LC_PAPER+x}" || export LC_PAPER
+        test -z "${LC_TELEPHONE+x}" || export LC_TELEPHONE
+        test -z "${LC_TIME+x}" || export LC_TIME
+        test -z "${LOCPATH+x}" || export LOCPATH
+fi
+
+if test -r /etc/profile; then
+        . /etc/profile
+fi
+
+ xfce4-session
+
+test -x /etc/X11/Xsession && exec /etc/X11/Xsession
+exec /bin/sh /etc/X11/Xsession
+
+END
+	chmod +x /etc/xrdp/startwm.sh
+	systemctl enable xrdp
+	systemctl restart xrdp
+	sleep 5
+	echo "等待启动XRDP服务器..."
+	systemctl restart guacd
+	cat > /etc/systemd/system/restartguacd.service <<END
+[Unit]
+Descript=Restart GUACD
+
+[Service]
+ExecStart=/etc/init.d/guacd start
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+END
+	systemctl daemon-reload
+	systemctl enable restartguacd
+	ss -lnpt | grep xrdp > /dev/null
+	if [ $? = 0 ] ; then
+		ss -lnpt | grep guacd > /dev/null
+		if [ $? = 0 ] ; then
+			say @B"XRDP与桌面环境配置成功!" green
+		else 
+			say @B"XRDP与桌面环境配置成功!" green
+			sleep 3
+			systemctl start guacd
+		fi
+		echo 
+	else
+		say "XRDP安装失败!" red
+		say @B"请检查上面的日志。" yellow
+		echo "欢迎您在https://github.com/Har-Kuun/OneClickDesktop/issues这里提交错误报告，以便我修复脚本。"
+		echo "谢谢！"
+		exit 1
+	fi
+}
+
 function display_license
 {
 	echo 
@@ -330,9 +531,6 @@ function install_reverse_proxy
 	sleep 2
 	apt-get install nginx certbot python3-certbot-nginx -y
 	say @B"Nginx安装成功！" green
-	echo 
-	echo "请输入您的域名（比如desktop.qing.su）:"
-	read guacamole_hostname
 	cat > /etc/nginx/conf.d/guacamole.conf <<END
 server {
         listen 80;
@@ -355,15 +553,7 @@ server {
 }
 END
 	systemctl reload nginx
-	echo 
-	echo "是否为域名${guacamole_hostname}申请免费的Let's Encrypt SSL证书？ [Y/N]"
-	say @B"设置证书之前，您必须将您的域名指向本服务器的IP地址！" yellow
-	echo "如果您确认了您的域名已经指向了本服务器的IP地址，请输入Y开始证书申请。"
-	read confirm_letsencrypt
-	echo 
 	if [ "x$confirm_letsencrypt" = "xY" ] || [ "x$confirm_letsencrypt" = "xy" ] ; then
-		echo "请输入一个邮箱地址:"
-		read le_email
 		certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email $le_email -d $guacamole_hostname
 		echo 
 		if [ -f /etc/letsencrypt/live/$guacamole_hostname/fullchain.pem ] ; then
@@ -375,10 +565,10 @@ END
 			say @B"开始使用您的远程桌面，请在浏览器中访问 http://${guacamole_hostname}!" green
 		fi
 	else
-		say @B"好的，如果您之后需要安装Let's Encrypt证书，请手动执行 \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\"." yellow
+		say @B"Let's Encrypt证书未安装，如果您之后需要安装Let's Encrypt证书，请手动执行 \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\"." yellow
 		say @B"开始使用您的远程桌面，请在浏览器中访问 http://${guacamole_hostname}!" green
 	fi
-	say @B"您的用户名是$guacamole_username，密码是 $guacamole_password_prehash。" green
+	say @B"您的Guacamole用户名是$guacamole_username，密码是 $guacamole_password_prehash。" green
 }
 
 function main
@@ -395,11 +585,25 @@ function main
 	read confirm_installation
 	if [ "x$confirm_installation" = "xY" ] || [ "x$confirm_installation" = "xy" ] ; then
 		determine_system_variables
+		get_user_options
 		install_guacamole
 		install_guacamole_web
 		configure_guacamole
-		install_desktop
-		install_reverse_proxy
+		if [ $choice_rdpvnc = 1 ] ; then
+			install_rdp
+		else
+			install_vnc
+		fi
+		if [ "x$install_nginx" = "xY" ] || [ "x$install_nginx" = "xy" ] ; then
+			install_reverse_proxy
+		else
+			say @B"开始使用您的远程桌面，请在浏览器中访问 http://$(curl -s icanhazip.com):8080/guacamole!" green
+			say @B"您的Guacamole用户名是$guacamole_username，密码是 $guacamole_password_prehash。" green
+		fi
+		if [ $choice_rdpvnc = 1 ] ; then
+			echo 
+			say @B"请注意，使用上述用户名与密码登录Guacamole后，您还会需要在XRDP登录界面输入Linux系统用户名与密码(比如root用户，或者自行新建一个用户)" yellow
+		fi
 	fi
 	echo 
 	echo "感谢您的使用！此脚本作者为https://qing.su"
