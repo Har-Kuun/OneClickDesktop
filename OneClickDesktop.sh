@@ -1,6 +1,6 @@
 #!/bin/bash
 ###########################################################################################
-#    One-click Desktop & Browser Access Setup Script v0.0.2                               #
+#    One-click Desktop & Browser Access Setup Script v0.1.0                               #
 #    Written by shc (https://qing.su)                                                     #
 #    Github link: https://github.com/Har-Kuun/OneClickDesktop                             #
 #    Contact me: https://t.me/hsun94   E-mail: hi@qing.su                                 #
