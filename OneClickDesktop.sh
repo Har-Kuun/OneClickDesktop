@@ -119,6 +119,86 @@ function determine_system_variables
 	HomeDir=$HOME
 }
 
+function get_user_options
+{
+	echo 
+	say @B"Please input your Guacamole username:" yellow
+	read guacamole_username
+	echo 
+	say @B"Please input your Guacamole password:" yellow
+	read guacamole_password_prehash
+	read guacamole_password_md5 <<< $(echo -n $guacamole_password_prehash | md5sum | awk '{print $1}')
+	echo 
+	say @B"Would you like Guacamole to connect to the server desktop through RDP or VNC?" yellow
+	say @B"Input 1 for RDP, or 2 for VNC.  If you have no idea what's this, please choose 1." yellow
+	read choice_rdpvnc
+	echo 
+	if [ $choice_rdpvnc = 1 ] ; then
+		say @B"Please choose a screen resolution." yellow
+		echo "Choose 1 for 1280x800 (default), 2 to fit your local screen, or 3 to manually configure RDP screen resolution."
+		read rdp_resolution_options
+		if [ $rdp_resolution_options = 2 ] ; then
+			set_rdp_resolution=0;
+		else
+			set_rdp_resolution=1;
+			if [ $rdp_resolution_options = 3 ] ; then
+				echo 
+				echo "Please type in screen width (default is 1280):"
+				read rdp_screen_width_input
+				echo "Please type in screen height (default is 800):"
+				read rdp_screen_height_input
+				if [ $rdp_screen_width_input -gt 1 ] && [ $rdp_screen_height_input -gt 1 ] ; then
+					rdp_screen_width=$rdp_screen_width_input
+					rdp_screen_height=$rdp_screen_height_input
+				else
+					say "Invalid screen resolution input." red
+					echo 
+					exit 1
+				fi
+			else
+				rdp_screen_width=1280
+				rdp_screen_height=800
+			fi
+		fi
+		say @B"Screen resolution successfully configured." green
+	else
+		echo 
+		while [ ${#vnc_password} != 8 ] ; do
+			say @B"Please input your 8-character VNC password:" yellow
+		read vnc_password
+		done
+		say @B"VNC password successfully configured." green
+		echo "Please note that VNC password is NOT needed for browser access."
+		sleep 1
+	fi
+	echo 
+	say @B"Would you like to set up Nginx Reverse Proxy?" yellow
+	say @B"Please note that if you want to copy or paste text between the server and your computer, you MUST set up an Nginx Reverse Proxy AND an SSL certificate.  You can set it up later manually though." yellow
+	echo "Please type [Y/n]:"
+	read install_nginx
+	if [ "x$install_nginx" = "xY" ] || [ "x$install_nginx" = "xy" ] ; then
+		echo 
+		say @B"Please tell me your domain name (e.g., desktop.qing.su):" yellow
+		read guacamole_hostname
+		echo 
+		echo 
+		echo "Would you like to install a free Let's Encrypt certificate for domain name ${guacamole_hostname}? [Y/N]"
+		say @B"Please point your domain name to this server IP BEFORE continuing!" yellow
+		echo "Type Y if you are sure that your domain is now pointing to this server IP."
+		read confirm_letsencrypt
+		echo 
+		if [ "x$confirm_letsencrypt" = "xY" ] || [ "x$confirm_letsencrypt" = "xy" ] ; then
+			echo "Please input an e-mail address:"
+			read le_email
+		fi
+	else
+		say @B"OK, Nginx will NOT be installed on this server." yellow
+	fi
+	echo 
+	say @B"Desktop environment installation will start now.  Please wait." green
+	sleep 3
+}	
+
 function install_guacamole
 {
 	echo 
@@ -189,20 +269,6 @@ function install_guacamole_web
 function configure_guacamole
 {
 	echo 
-	say @B"Please input your username:" yellow
-	read guacamole_username
-	echo 
-	say @B"Please input your password:" yellow
-	read guacamole_password_prehash
-	echo 
-	read guacamole_password_md5 <<< $(echo -n $guacamole_password_prehash | md5sum | awk '{print $1}')
-	while [ ${#vnc_password} != 8 ] ; do
-		say @B"Please input your 8-character VNC password:" yellow
-		read vnc_password
-	done
-	echo "Please note that VNC password is NOT needed for browser access."
-	sleep 1
-	echo 
 	mkdir /etc/guacamole/
 	cat > /etc/guacamole/guacamole.properties <<END
 guacd-hostname: localhost
@@ -210,7 +276,42 @@ guacd-port: 4822
 auth-provider: net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
 basic-user-mapping: /etc/guacamole/user-mapping.xml
 END
-	cat > /etc/guacamole/user-mapping.xml <<END
+	if [ $choice_rdpvnc = 1 ] ; then
+		if [ $set_rdp_resolution = 0 ] ; then
+			cat > /etc/guacamole/user-mapping.xml <<END
+<user-mapping>
+    <authorize
+         username="$guacamole_username"
+         password="$guacamole_password_md5"
+         encoding="md5">      
+       <connection name="default">
+         <protocol>rdp</protocol>
+         <param name="hostname">localhost</param>
+         <param name="port">3389</param>
+       </connection>
+    </authorize>
+</user-mapping>
+END
+		else
+			cat > /etc/guacamole/user-mapping.xml <<END
+<user-mapping>
+    <authorize
+         username="$guacamole_username"
+         password="$guacamole_password_md5"
+         encoding="md5">      
+       <connection name="default">
+         <protocol>rdp</protocol>
+         <param name="hostname">localhost</param>
+         <param name="port">3389</param>
+		 <param name="width">$rdp_screen_width</param>
+		 <param name="height">$rdp_screen_height</param>
+       </connection>
+    </authorize>
+</user-mapping>
+END
+		fi
+	else
+		cat > /etc/guacamole/user-mapping.xml <<END
 <user-mapping>
     <authorize
          username="$guacamole_username"
@@ -225,12 +326,13 @@ END
     </authorize>
 </user-mapping>
 END
+	fi
 	systemctl restart tomcat9 guacd
 	say @B"Guacamole successfully configured!" green
 	echo 
 }
 
-function install_desktop
+function install_vnc
 {
 	echo 
 	echo "Starting to install desktop, browser, and VNC server..."
@@ -310,6 +412,105 @@ END
 	fi
 }
 
+function install_rdp
+{
+	echo 
+	echo "Starting to install desktop, browser, and XRDP server..."
+	say @B"Please note that if you are asked to configure LightDM during this step, simply press Enter." yellow
+	echo 
+	echo "Press Enter to continue."
+	read catch_all
+	echo 
+	if [ "$OS" = "DEBIAN10" ] ; then
+		apt-get install xfce4 xfce4-goodies firefox-esr xrdp -y
+	else 
+		apt-get install xfce4 xfce4-goodies firefox xrdp -y
+	fi
+	say @B"Desktop, browser, and XRDP server successfully installed." green
+	echo "Starting to configure XRDP server..."
+	sleep 2
+	echo 
+	mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh.backup
+	cat > /etc/xrdp/startwm.sh <<END
+#!/bin/sh
+# xrdp X session start script (c) 2015, 2017 mirabilos
+# published under The MirOS Licence
+
+if test -r /etc/profile; then
+        . /etc/profile
+fi
+
+if test -r /etc/default/locale; then
+        . /etc/default/locale
+        test -z "${LANG+x}" || export LANG
+        test -z "${LANGUAGE+x}" || export LANGUAGE
+        test -z "${LC_ADDRESS+x}" || export LC_ADDRESS
+        test -z "${LC_ALL+x}" || export LC_ALL
+        test -z "${LC_COLLATE+x}" || export LC_COLLATE
+        test -z "${LC_CTYPE+x}" || export LC_CTYPE
+        test -z "${LC_IDENTIFICATION+x}" || export LC_IDENTIFICATION
+        test -z "${LC_MEASUREMENT+x}" || export LC_MEASUREMENT
+        test -z "${LC_MESSAGES+x}" || export LC_MESSAGES
+        test -z "${LC_MONETARY+x}" || export LC_MONETARY
+        test -z "${LC_NAME+x}" || export LC_NAME
+        test -z "${LC_NUMERIC+x}" || export LC_NUMERIC
+        test -z "${LC_PAPER+x}" || export LC_PAPER
+        test -z "${LC_TELEPHONE+x}" || export LC_TELEPHONE
+        test -z "${LC_TIME+x}" || export LC_TIME
+        test -z "${LOCPATH+x}" || export LOCPATH
+fi
+
+if test -r /etc/profile; then
+        . /etc/profile
+fi
+
+ xfce4-session
+
+test -x /etc/X11/Xsession && exec /etc/X11/Xsession
+exec /bin/sh /etc/X11/Xsession
+
+END
+	chmod +x /etc/xrdp/startwm.sh
+	systemctl enable xrdp
+	systemctl restart xrdp
+	sleep 5
+	echo "Waiting to start XRDP server..."
+	systemctl restart guacd
+	cat > /etc/systemd/system/restartguacd.service <<END
+[Unit]
+Descript=Restart GUACD
+
+[Service]
+ExecStart=/etc/init.d/guacd start
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+END
+	systemctl daemon-reload
+	systemctl enable restartguacd
+	ss -lnpt | grep xrdp > /dev/null
+	if [ $? = 0 ] ; then
+		ss -lnpt | grep guacd > /dev/null
+		if [ $? = 0 ] ; then
+			say @B"XRDP and desktop successfully configured!" green
+		else 
+			say @B"XRDP and desktop successfully configured!" green
+			sleep 3
+			systemctl start guacd
+		fi
+		echo 
+	else
+		say "XRDP installation failed!" red
+		say @B"Please check the above log for reasons." yellow
+		echo "Please also consider to report your log here https://github.com/Har-Kuun/OneClickDesktop/issues so that I can fix this issue."
+		echo "Thank you!"
+		exit 1
+	fi
+}
+
 function display_license
 {
 	echo 
@@ -330,9 +531,6 @@ function install_reverse_proxy
 	sleep 2
 	apt-get install nginx certbot python3-certbot-nginx -y
 	say @B"Nginx successfully installed!" green
-	echo 
-	echo "Please tell me your domain name (e.g., desktop.qing.su):"
-	read guacamole_hostname
 	cat > /etc/nginx/conf.d/guacamole.conf <<END
 server {
         listen 80;
@@ -355,15 +553,7 @@ server {
 }
 END
 	systemctl reload nginx
-	echo 
-	echo "Would you like to install a free Let's Encrypt certificate for domain name ${guacamole_hostname}? [Y/N]"
-	say @B"Please point your domain name to this server IP BEFORE continuing!" yellow
-	echo "Type Y if you are sure that your domain is now pointing to this server IP."
-	read confirm_letsencrypt
-	echo 
 	if [ "x$confirm_letsencrypt" = "xY" ] || [ "x$confirm_letsencrypt" = "xy" ] ; then
-		echo "Please input an e-mail address:"
-		read le_email
 		certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email $le_email -d $guacamole_hostname
 		echo 
 		if [ -f /etc/letsencrypt/live/$guacamole_hostname/fullchain.pem ] ; then
@@ -375,7 +565,7 @@ END
 			say @B"You can now access your desktop at http://${guacamole_hostname}!" green
 		fi
 	else
-		say @B"No problem! If you would like to install a Let's Encrypt certificate later, please manually run \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\"." yellow
+		say @B"Let's Encrypt certificate not installed! If you would like to install a Let's Encrypt certificate later, please manually run \"certbot --nginx --agree-tos --redirect --hsts --staple-ocsp -d $guacamole_hostname\"." yellow
 		say @B"You can now access your desktop at http://${guacamole_hostname}!" green
 	fi
 	say @B"Your username is $guacamole_username and your password is $guacamole_password_prehash." green
@@ -395,11 +585,25 @@ function main
 	read confirm_installation
 	if [ "x$confirm_installation" = "xY" ] || [ "x$confirm_installation" = "xy" ] ; then
 		determine_system_variables
+		get_user_options
 		install_guacamole
 		install_guacamole_web
 		configure_guacamole
-		install_desktop
-		install_reverse_proxy
+		if [ $choice_rdpvnc = 1 ] ; then
+			install_rdp
+		else
+			install_vnc
+		fi
+		if [ "x$install_nginx" = "xY" ] || [ "x$install_nginx" = "xy" ] ; then
+			install_reverse_proxy
+		else
+			say @B"You can now access your desktop at http://$(curl -s icanhazip.com):8080/guacamole!" green
+			say @B"Your Guacamole username is $guacamole_username and your password is $guacamole_password_prehash." green
+		fi
+		if [ $choice_rdpvnc = 1 ] ; then
+			echo 
+			say @B"Note that after entering Guacamole using the above Guacamole credentials, you will be asked to input your Linux server username and password in the XRDP login panel, which is NOT the guacamole username and password above." yellow
+		fi
 	fi
 	echo 
 	echo "Thank you for using this script written by https://qing.su!"
