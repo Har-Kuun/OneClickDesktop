@@ -602,7 +602,7 @@ function main
 		fi
 		if [ $choice_rdpvnc = 1 ] ; then
 			echo 
-			say @B"请注意，使用上述用户名与密码登录Guacamole后，您还会需要在XRDP登录界面输入Linux系统用户名与密码(比如root用户，或者自行新建一个用户)" yellow
+			say @B"请注意，使用上述用户名与密码登录Guacamole后，您还会需要在XRDP登录界面输入Linux系统用户名与密码(比如root用户，或者自行新建一个用户)。Session选项请保持默认Xorg即可。" yellow
 		fi
 	fi
 	echo 
