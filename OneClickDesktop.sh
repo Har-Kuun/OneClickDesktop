@@ -602,7 +602,7 @@ function main
 		fi
 		if [ $choice_rdpvnc = 1 ] ; then
 			echo 
-			say @B"Note that after entering Guacamole using the above Guacamole credentials, you will be asked to input your Linux server username and password in the XRDP login panel, which is NOT the guacamole username and password above." yellow
+			say @B"Note that after entering Guacamole using the above Guacamole credentials, you will be asked to input your Linux server username and password in the XRDP login panel, which is NOT the guacamole username and password above.  Please use the default Xorg as session type." yellow
 		fi
 	fi
 	echo 
