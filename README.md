@@ -25,7 +25,7 @@ wget https://raw.githubusercontent.com/Har-Kuun/OneClickDesktop/master/OneClickD
 * The script will guide you through the installation process.
 * If you encounter any errors, please check the `OneClickDesktop.log` file that's located within the same directory where you download this script.
 * Please consider reporting the error log at https://github.com/Har-Kuun/OneClickDesktop/issues so that I can fix any underlying issues.
-* Copy/paste between client and server should be enabled.  If you have any problems with copy/paste, please try to run the EnableCopyPaste.sh file on your Desktop.
+* Copy/paste between client and server should have been enabled by default.  If you have any problems with copy/paste when using VNC method, please try to run the EnableCopyPaste.sh file on your Desktop.
 
 ## Plugins
 There is a few plugin scripts/addons available.
