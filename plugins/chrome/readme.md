@@ -20,11 +20,19 @@ sudo apt-get install gdebi -y
 
 (3) A Download Chrome for Linux message box will pop up.  Please choose the `64bit .deb` version, click `Accept and Install`, and save the .deb package to your disk.
 
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/download_chrome.png)
+
 (4) Navigate to the Downloads folder `/root/Downloads/` using the File Manager.  Right click on the .deb file, then left click the first option `Open with "GDebi Package Installer"`.
+
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/install_with_gdebi.png)
 
 (5) Click `Install Package`.
 
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/installing_chrome.png)
+
 (6) After a few seconds, the `Installation Finished` message will show up.  You can then close all windows, then __LOG OUT__ of the desktop.
+
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/installation_finished.png)
 
 ### 3. Use Chrome
 
@@ -32,4 +40,8 @@ In order to use Chrome, you have to log in to your Linux desktop with a `non-roo
 
 After logging in, click the `Application` in the upper-left corner of your desktop screen, scroll down to `Internet`, and you will see `Chrome` right below `Firefox`.
 
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/use_chrome.png)
+
 You can now start to use the Chrome browser.  If you wish, you can set it as your default browser.
+
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/chrome_installation_completed.png)
