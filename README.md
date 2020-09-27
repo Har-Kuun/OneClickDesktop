@@ -29,8 +29,8 @@ wget https://raw.githubusercontent.com/Har-Kuun/OneClickDesktop/master/OneClickD
 
 ## Plugins
 There is a few plugin scripts/addons available.
-* One-click install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh  Please note that this plugin currently only works for VNC method, not for RDP method.  Please install Chrome manually for RDP desktop environment.
-* One-click change web-login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
+* A very simple guide to install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/chrome/readme.md
+* One-click change Guacamole login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
 * Tutorial to install Baiduyun Net Disk client.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/baiduyun.md
 
 Please submit an issue if you want more plugins to be written.
