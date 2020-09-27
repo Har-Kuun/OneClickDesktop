@@ -1,6 +1,6 @@
 This is a simple guide to install Chrome browser on the Guacamole-XRDP-Xfce4 based Linux desktop.
 
-Please note that, this guide is written for the RDP version of OneClickDesktop.  If you are using the VNC version, this guide will NOT work for you.  Please use the [chrome script](https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh) to install instead.
+Please note that, this guide is written for the RDP version of OneClickDesktop.  If you are using the VNC version, this guide will NOT work for you.  Please use the [chrome script](https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/chrome/ChromeBrowser.sh) to install instead.
 
 ## Chrome Installation Guide
 
