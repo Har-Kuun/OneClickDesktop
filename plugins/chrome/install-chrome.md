@@ -1,0 +1,35 @@
+This is a simple guide to install Chrome browser on the Guacamole-XRDP-Xfce4 based Linux desktop.
+
+Please note that, this guide is written for the RDP version of OneClickDesktop.  If you are using the VNC version, this guide will NOT work for you.  Please use the [chrome script](https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/ChromeBrowser.sh) to install instead.
+
+## Chrome Installation Guide
+
+### 1. Install GDebi
+
+Log in to the SSH, or open the Terminal Emulator on your Linux desktop.  Run the following command:
+
+```
+sudo apt-get install gdebi -y
+```
+
+### 2. Install Chrome
+
+(1) Use your web browser, enter your Linux desktop, with `root` account.  This step is very important; using any other account, even with sudo privilege, will NOT work.  Please rest assured that only the installation step requires root privilege; using Chrome does NOT need root privilege.
+
+(2) Open your default web browser (Firefox), navigate to https://www.google.com/chrome/, and click `Download Chrome` in the center of the page.
+
+(3) A Download Chrome for Linux message box will pop up.  Please choose the `64bit .deb` version, click `Accept and Install`, and save the .deb package to your disk.
+
+(4) Navigate to the Downloads folder `/root/Downloads/` using the File Manager.  Right click on the .deb file, then left click the first option `Open with "GDebi Package Installer"`.
+
+(5) Click `Install Package`.
+
+(6) After a few seconds, the `Installation Finished` message will show up.  You can then close all windows, then __LOG OUT__ of the desktop.
+
+### 3. Use Chrome
+
+In order to use Chrome, you have to log in to your Linux desktop with a `non-root` account.
+
+After logging in, click the `Application` in the upper-left corner of your desktop screen, scroll down to `Internet`, and you will see `Chrome` right below `Firefox`.
+
+You can now start to use the Chrome browser.  If you wish, you can set it as your default browser.
