@@ -1,5 +1,5 @@
 # OneClickDesktop
-A one-click script that installs a remote desktop environment on a Linux server with browser/VNC access.
+A one-click script that installs a remote desktop environment on a Linux server with browser/VNC/RDP access.
 
 ## Features of this script
 * Build Guacamole Server from source.
@@ -9,14 +9,15 @@ A one-click script that installs a remote desktop environment on a Linux server 
 * You can access your remote desktop from browsers, no need for RDP or VNC software.
 
 ## System requirement
-* A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit or Debian 10 64 bit system
+* A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit, Debian 10 64 bit, or CentOS 7/8 64 bit system
 * __Do NOT install any web server programs (e.g., Apache, Nginx, LiteSpeed, Caddy).  Do NOT install LAMP or LEMP stack.  Do NOT install any admin panels (e.g., cPanel, DirectAdmin, BTcn, VestaCP).  They are NOT compatible with this script.__
 * 1 IPv4
-* At least 1024 MB RAM; 1.5+ GB is recommended.
+* For Debian/Ubuntu users, at least 1.0 GB RAM is required; 1.5+ GB is recommended.
+* For CentOS users, at least 1.5 GB RAM is required; 2.0+ GB is recommended.
 * Root access, or sudo user
 
 ## How to use
-* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 18.04/20.04 LTS 64 bit (recommended) or Debian 10 64 bit OS.
+* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 18.04/20.04 LTS 64 bit (recommended), Debian 10 64 bit, or CentOS 7/8 64 bit OS.
 * You need a domain name (can be a subdomain) which points to the IP address of your server.
 * Then, please run the following command as a sudo user in SSH.
 ```
@@ -57,3 +58,4 @@ Thank you!
 |08/02/2020|v0.0.1|Script created|
 |08/03/2020|v0.0.2|Enable copy/paste; add Asian characters support.|
 |09/25/2020|v0.1.0|Add RDP feature; improve installation experience.|
+|09/29/2020|v0.2.0|Add CentOS 7/8 support.|
