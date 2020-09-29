@@ -2,7 +2,7 @@ This is a simple guide to install Chrome browser on the Guacamole-XRDP-Xfce4 bas
 
 Please note that, this guide is written for the RDP version of OneClickDesktop.  If you are using the VNC version, this guide will NOT work for you.  Please use the [chrome script](https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/chrome/ChromeBrowser.sh) to install instead.
 
-## Chrome Installation Guide
+## Chrome Installation Guide for Debian/Ubuntu Users
 
 ### 1. Install GDebi
 
@@ -45,3 +45,24 @@ After logging in, click the `Application` in the upper-left corner of your deskt
 You can now start to use the Chrome browser.  If you wish, you can set it as your default browser.
 
 ![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/chrome_installation_completed.png)
+
+
+## Chrome Installation Guide for CentOS Users
+
+### 1. Install Chrome
+
+Chrome installation in CentOS is easy.  Simply SSH into your server or use its desktop terminal, and run the following command.
+
+```
+sudo yum -y localinstall https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+```
+
+### 2. Use Chrome
+
+In order to use Chrome, you have to log in to your Linux desktop with a `non-root` account.
+
+After logging in, click the `Application` in the upper-left corner of your desktop screen, scroll down to `Internet`, and you will see `Chrome` right below `Firefox`.
+
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/use_chrome_centos7.png)
+
+You can now start to use the Chrome browser.  If you wish, you can set it as your default browser.
