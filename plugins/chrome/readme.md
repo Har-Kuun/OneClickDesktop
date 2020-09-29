@@ -63,6 +63,14 @@ In order to use Chrome, you have to log in to your Linux desktop with a `non-roo
 
 After logging in, click the `Application` in the upper-left corner of your desktop screen, scroll down to `Internet`, and you will see `Chrome` right below `Firefox`.
 
+CentOS 7:
+
 ![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/use_chrome_centos7.png)
+
+---
+
+CentOS 8:
+
+![](https://github.com/Har-Kuun/OneClickDesktop/raw/master/plugins/chrome/use_chrome_centos8.png)
 
 You can now start to use the Chrome browser.  If you wish, you can set it as your default browser.
