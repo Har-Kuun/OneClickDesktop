@@ -342,7 +342,7 @@ function install_guacamole_centos
 
 function install_tomcat9_centos
 {
-	curl -s https://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz | tar -xz
+	curl -s https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz | tar -xz
 	mv apache-tomcat-9.0.38 /etc/tomcat9
 	echo "export CATALINA_HOME="/etc/tomcat9"" >> ~/.bashrc
 	source ~/.bashrc
