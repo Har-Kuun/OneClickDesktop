@@ -126,6 +126,8 @@ function display_license
 
 function AudioRedirectionSetup_Ubuntu
 {
+	sed -i 's/# deb-src/deb-src/' /etc/apt/sources.list
+	apt-get update -y
 	apt-get install software-properties-common -y
 	apt-add-repository -s -y 'deb http://archive.ubuntu.com/ubuntu/ '$OS' main restricted'
 	apt-add-repository -s -y 'deb http://archive.ubuntu.com/ubuntu/ '$OS' restricted universe main multiverse'
