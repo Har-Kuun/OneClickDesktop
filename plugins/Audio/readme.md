@@ -66,5 +66,6 @@ Then press CTRL+C to exit to the terminal.
 
 You should now see **xrdp sink** in your volume control now, indicating that you have sound.
 
+中文详细教程请看这里：https://qing.su/article/pulseaudio-audio-redirection-oneclickdesktop.html
 
 Please report any issue that you encounter during the Audio redirection setup.
