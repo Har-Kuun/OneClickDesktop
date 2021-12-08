@@ -33,6 +33,7 @@ There is a few plugin scripts/addons available.
 * A very simple guide to install Chrome browser.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/chrome/readme.md
 * One-click change Guacamole login password.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/change-Guacamole-password.sh
 * Tutorial to install Baiduyun Net Disk client.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/baiduyun.md
+* A script to set up sound.  Check out https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/Audio/readme.md
 
 Please submit an issue if you want more plugins to be written.
 
@@ -95,7 +96,7 @@ Thank you!
 * A: As mentioned before, you have to set up SSL for your Guacamole; otherwise your browser will not allow you to copy-paste between the two servers.
 
 15. Q: I cannot hear anything when I use my server desktop to watch videos, why?
-* A: If you are using a VPS, you are not supposed to hear anything because it does not have a sound card.
+* A: Please check the plugin section here for sound setup.  https://github.com/Har-Kuun/OneClickDesktop/blob/master/plugins/Audio/readme.md
 
 16. Q: Can I install Software XXX/YYY/ZZZ on this desktop?
 * A: Most likely, yes.  If you are using CentOS, there is an APP store on your desktop, and you can search for the software you want; if you are using Debian/Ubuntu, you can simply google "How to install XXX on ubuntu 20" and you can usually find a dozen tutorials.
