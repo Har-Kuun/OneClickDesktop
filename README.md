@@ -1,4 +1,5 @@
 # OneClickDesktop
+OneClickDesktop v0.3
 A one-click script that installs a remote desktop environment on a Linux server with browser/VNC/RDP access.
 
 ## Features of this script
@@ -9,15 +10,14 @@ A one-click script that installs a remote desktop environment on a Linux server 
 * You can access your remote desktop from browsers, no need for RDP or VNC software.
 
 ## System requirement
-* A __freshly installed__ server, with Ubuntu 18.04/20.04 LTS 64 bit, Debian 10 64 bit, or CentOS 7/8 64 bit system
+* A __freshly installed__ server, with Ubuntu 22.04 LTS 64 bit or Debian 11 64 bit system
 * __Do NOT install any web server programs (e.g., Apache, Nginx, LiteSpeed, Caddy).  Do NOT install LAMP or LEMP stack.  Do NOT install any admin panels (e.g., cPanel, DirectAdmin, BTcn, VestaCP).  They are NOT compatible with this script.__
 * 1 IPv4
-* For Debian/Ubuntu users, at least 1.0 GB RAM is required; 1.5+ GB is recommended.
-* For CentOS users, at least 1.5 GB RAM is required; 2.0+ GB is recommended.
+* At least 1.0 GB RAM is required; 1.5+ GB is recommended.
 * Root access, or sudo user
 
 ## How to use
-* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 18.04/20.04 LTS 64 bit (recommended), Debian 10 64 bit, or CentOS 7/8 64 bit OS.
+* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 22.04 LTS 64 bit or Debian 11 64 bit OS.
 * You need a domain name (can be a subdomain) which points to the IP address of your server.
 * Then, please run the following command as a sudo user in SSH.
 ```
@@ -50,19 +50,16 @@ Thank you!
 ### General
 
 1. Q: Should I choose RDP or VNC?
-* A: I'd always choose RDP.  It performs better than VNC by all means.
+* A: Forget about VNC.  The new version only supports RDP, which provices faster speed and more stable connections.
 
 2. Q: Which OS should I use?
-* A: This script supports Ubuntu 18/20, Debian 10, and CentOS 7/8.  OS choice mainly comes down to personal preferences.  There are a couple points that I'd love to note here.  If you choose Debian 10, LibreOffice will be installed out-of-the-box after running this script.  If you choose CentOS 7/8, the script will install GNOME instead of XFCE4 desktop environment (hence the extra 0.5 GB RAM consumption); GNOME is fancier than XFCE4, but renders a bit slower.  Also note that for CentOS 7/8, a lot of packages will be downloaded from third-party repositories (rpmfusion, rpmfind, etc.), or cloned from Github; if that is an issue to you, please use Debian or Ubuntu instead.
+* A: As of this point, this script supports Ubuntu 20.04 LTS, 22.04 LTS and Debian 11 (recommended) only.  In future, Ubuntu 24.04 and Debian 12 support will be adde.
 
 3. Q: Should I use my root user or a non-root user to use my desktop?
-* A: For RDP, you should always use a non-root user, unless you wish to install some certain software on your desktop.  To create a non-root user, simply run `adduser USERNAME` in your terminal or SSH.  For VNC, there is no option to select an user unless you modify the script itself, so you don't have to worry about this.
+* A: For RDP, you should always use a non-root user, unless you wish to install some certain software on your desktop.  To create a non-root user, simply run `adduser USERNAME` in your terminal or SSH.
 
 4. Q: Should I choose to set up Nginx reverse proxy and Let's Encrypt SSL?
 * A: Unless you are installing your desktop environment alongside a production environment (which is highly discouraged), you should always choose to set up Nginx reverse proxy and Let's Encrypt SSL.  Please note that unless you enable SSL for your desktop access, your browser probably won't let you copy-paste between the remote desktop and your local computer.  If you are installing this desktop environment alongside a production environment, you should set up your current webserver software (Apache, Nginx, Litespeed, Caddy, etc.) as a reverse proxy of http://127.0.0.1:8080/guacamole and set up SSL for it.
-
-5. Q: Are there any security measures that can be taken to make this desktop environment safer?
-* A: Yes.  First of all, RDP is safer than VNC in this special case, so I would always choose RDP if possible.  Secondly, I will set up firewall rules to only allow traffic through port 80 and 443, unless you need to connect to your desktop using other VNC/RDP client software other than your browser, and if that's the case, please change the default port (3389 for RDP and 5901 for VNC) to something else.
 
 ### Installation
 
@@ -79,7 +76,7 @@ Thank you!
 * A: This usually happens on CentOS when Selinux is enabled.  Selinux might prohibit Tomcat from running.  If this happens, you should consider disabling Selinux or changing its rules, then start Tomcat9 server manually by running `service tomcat9 start`.
 
 10. Q: The script tells me that I am missing dependencies.  Shouldn't dependencies be handled already in the script?
-* A: This happens frequently to Chinese users who use Aliyun mirrors.  Aliyun mirrors have some sort of disgusting rate limitations, which might leads to incomplete installation of dependencies through apt/yum/dnf.  Please change your mirror source to another source, then run this script again.  If you are not using Aliyun mirror and still saw the missing dependencies notice, please report it by rasing an issue here so that I can fix it.
+* A: This happens frequently to Chinese users.  Please try other mirror sources, then run this script again.
 
 11. Q: The script got killed during compilation; what happened?
 * A: This is very unusual, but may happen if your server does not have enough RAM; please add some SWAP and run the script again.
@@ -117,3 +114,5 @@ Thank you!
 |08/03/2020|v0.0.2|Enable copy/paste; add Asian characters support.|
 |09/25/2020|v0.1.0|Add RDP feature; improve installation experience.|
 |09/29/2020|v0.2.0|Add CentOS 7/8 support.|
+|02/14/2025|v0.3.0|Deprecated old OS; added Ubuntu 22 and Debian 11 support.|
+
