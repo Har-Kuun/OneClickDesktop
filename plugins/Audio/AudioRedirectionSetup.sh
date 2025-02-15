@@ -22,35 +22,49 @@ exec 2>&1
 function check_OS
 {
 	if [ -f /etc/lsb-release ] ; then
-		cat /etc/lsb-release | grep "DISTRIB_RELEASE=18." >/dev/null
+		cat /etc/lsb-release | grep "DISTRIB_RELEASE=24." >/dev/null
 		if [ $? = 0 ] ; then
-			OS=bionic
+			OS=UBUNTU24
 		else
-			cat /etc/lsb-release | grep "DISTRIB_RELEASE=20." >/dev/null
+			cat /etc/lsb-release | grep "DISTRIB_RELEASE=22." >/dev/null
 			if [ $? = 0 ] ; then
-				OS=focal
+				OS=UBUNTU22
 			else
-				say "Sorry, this script only supports Ubuntu 18/20, and Debian 10." red
-				echo 
-				exit 1
+				cat /etc/lsb-release | grep "DISTRIB_RELEASE=20." >/dev/null
+				if [ $? = 0 ] ; then
+					OS=UBUNTU20
+				else
+					say "Sorry, this script only supports Ubuntu 22 and Debian 11." red
+					echo 
+					exit 1
+				fi
 			fi
 		fi
 	elif [ -f /etc/debian_version ] ; then
-		cat /etc/debian_version | grep "^10." >/dev/null
+		cat /etc/debian_version | grep "^12." >/dev/null
 		if [ $? = 0 ] ; then
-			OS=DEBIAN10
+			OS=DEBIAN12
 		else
-			say "Sorry, this script only supports Ubuntu 18/20, and Debian 10." red
-			echo 
-			exit 1
+			cat /etc/debian_version | grep "^11." >/dev/null
+			if [ $? = 0 ] ; then
+				OS=DEBIAN11
+			else
+				cat /etc/debian_version | grep "^10." >/dev/null
+				if [ $? = 0 ] ; then
+					OS=DEBIAN10
+				else
+					say "Sorry, this script only supports Ubuntu 22 and Debian 11." red
+					echo 
+					exit 1
+				fi
+			fi
 		fi
 	else
-		say "Sorry, this script only supports Ubuntu 18/20, and Debian 10." red
+		say "Sorry, this script only supports Ubuntu 22 and Debian 11." red
 		echo 
 		exit 1
 	fi
 }
-
 function say
 {
 #This function is a colored version of the built-in "echo."
@@ -233,7 +247,7 @@ function main
 	if [ "x$confirm_installation" = "xY" ] || [ "x$confirm_installation" = "xy" ] ; then
 		check_OneClickDesktop_installation
 		CurrentDir=$(pwd)
-		if [ "$OS" = "DEBIAN10" ] ; then
+		if [ "$OS" = "DEBIAN11" ] ; then
 			AudioRedirectionSetup_Debian
 		else
 			AudioRedirectionSetup_Ubuntu
