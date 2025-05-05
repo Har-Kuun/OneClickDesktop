@@ -1,5 +1,4 @@
-# OneClickDesktop
-OneClickDesktop v0.3
+# OneClickDesktop v0.4
 A one-click script that installs a remote desktop environment on a Linux server with browser/VNC/RDP access.
 
 ## Features of this script
@@ -10,14 +9,14 @@ A one-click script that installs a remote desktop environment on a Linux server 
 * You can access your remote desktop from browsers, no need for RDP or VNC software.
 
 ## System requirement
-* A __freshly installed__ server, with Ubuntu 22.04 LTS 64 bit or Debian 11 64 bit system
+* A __freshly installed__ server, with Ubuntu 24.04 LTS 64 bit or Debian 12 64 bit system
 * __Do NOT install any web server programs (e.g., Apache, Nginx, LiteSpeed, Caddy).  Do NOT install LAMP or LEMP stack.  Do NOT install any admin panels (e.g., cPanel, DirectAdmin, BTcn, VestaCP).  They are NOT compatible with this script.__
 * 1 IPv4
 * At least 1.0 GB RAM is required; 1.5+ GB is recommended.
 * Root access, or sudo user
 
 ## How to use
-* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 22.04 LTS 64 bit or Debian 11 64 bit OS.
+* Firstly, you need to find a spare VPS with at least 1 IPv4, and install Ubuntu 24.04 LTS 64 bit or Debian 12 64 bit OS.
 * You need a domain name (can be a subdomain) which points to the IP address of your server.
 * Then, please run the following command as a sudo user in SSH.
 ```
@@ -53,7 +52,7 @@ Thank you!
 * A: Forget about VNC.  The new version only supports RDP, which provices faster speed and more stable connections.
 
 2. Q: Which OS should I use?
-* A: As of this point, this script supports Ubuntu 20.04 LTS, 22.04 LTS and Debian 11 (recommended) only.  In future, Ubuntu 24.04 and Debian 12 support will be adde.
+* A: As of this point, this script supports Ubuntu 24.04 LTS and Debian 12 only.  It may run properly on Debian 11 or Ubuntu 22.04 LTS, but there's no guarantee.
 
 3. Q: Should I use my root user or a non-root user to use my desktop?
 * A: For RDP, you should always use a non-root user, unless you wish to install some certain software on your desktop.  To create a non-root user, simply run `adduser USERNAME` in your terminal or SSH.
@@ -106,7 +105,7 @@ Thank you!
 * The author thanks LinuxBabe for providing a [detailed Guacamole/VNC setup tutorial for Debian/Ubuntu](https://www.linuxbabe.com/debian/apache-guacamole-remote-desktop-debian-10-buster).
 
 ## Update log
- __Current version: v0.1.0__
+ __Current version: v0.4.0__
 
 |Date|Version|Changes|
 |---|---|---|
@@ -115,4 +114,4 @@ Thank you!
 |09/25/2020|v0.1.0|Add RDP feature; improve installation experience.|
 |09/29/2020|v0.2.0|Add CentOS 7/8 support.|
 |02/14/2025|v0.3.0|Deprecated old OS; added Ubuntu 22 and Debian 11 support.|
-
+|05/04/2025|v0.4.0|Deprecated old OS; added Ubuntu 24 and Debian 12 support.|
